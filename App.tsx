@@ -1,20 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import {styled} from "nativewind";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    const StyledView = styled(View)
+    const StyledText = styled(Text)
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    return (
+        <StyledView className="bg-black flex-1">
+            <StyledText>Open up App.tsx to start working on your app!</StyledText>
+            <StatusBar style="auto" />
+        </StyledView>
+    );
+}
