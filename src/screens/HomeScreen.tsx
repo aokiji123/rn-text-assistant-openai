@@ -1,9 +1,10 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Features} from "../components";
-import {SafeAreaView, Text, View, Image, ScrollView, TouchableOpacity} from "react-native";
+import {SafeAreaView, Text, View, Image, ScrollView, TouchableOpacity, TextInput} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {styled} from "nativewind";
-import Voice, {SpeechErrorEvent, SpeechResultsEvent} from "@react-native-voice/voice";
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faXmark, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 enum Role {
     USER = 'user',
@@ -31,8 +32,7 @@ const messagesData = [
 
 const HomeScreen = () => {
     const [messages, setMessages] = useState(messagesData)
-    const [recording, setRecording] = useState(false)
-    const [speaking, setSpeaking] = useState(true)
+    const [value, setValue] = useState('')
 
     const StyledSafeAreaView = styled(SafeAreaView)
     const StyledView = styled(View)
@@ -40,41 +40,11 @@ const HomeScreen = () => {
     const StyledImage = styled(Image)
     const StyledScrollView = styled(ScrollView)
     const StyledTouchableOpacity = styled(TouchableOpacity)
+    const StyledTextInput = styled(TextInput)
 
     const clear = () => {
         setMessages([])
     }
-
-    const stopSpeaking = () => {
-        setSpeaking(false)
-    }
-
-    const speechStartHandler = () => {
-        console.log('Speech start handler')
-    }
-
-    const speechEndHandler = () => {
-        console.log('Speech end handler')
-    }
-
-    const speechResultsHandler = (event: SpeechResultsEvent) => {
-        console.log('Speech results handler', event)
-    }
-
-    const speechErrorHandler = (event: SpeechErrorEvent) => {
-        console.log('Speech error handler', event)
-    }
-
-    useEffect(() => {
-        Voice.onSpeechStart = speechStartHandler;
-        Voice.onSpeechEnd = speechEndHandler;
-        Voice.onSpeechResults = speechResultsHandler;
-        Voice.onSpeechError = speechErrorHandler;
-
-        return () => {
-            Voice.destroy().then(Voice.removeAllListeners);
-        };
-    }, []);
 
     return (
         <StyledView className="flex-1 bg-white">
@@ -87,9 +57,16 @@ const HomeScreen = () => {
                 {
                     messages.length > 0 ? (
                         <StyledView className="space-y-2 flex-1">
-                            <StyledText style={{ fontSize: wp(5) }} className="text-gray-700 font-semibold ml-1">
-                                Assistant
-                            </StyledText>
+                            <StyledView className="flex flex-row items-center justify-between">
+                                <StyledText style={{ fontSize: wp(5) }} className="text-gray-700 font-semibold ml-1">
+                                    Assistant
+                                </StyledText>
+                                <StyledTouchableOpacity>
+                                    <StyledText style={{ fontSize: wp(4) }} className="flex-1 ml-1" onPress={clear}>
+                                        <FontAwesomeIcon icon={faXmark} size={30} />
+                                    </StyledText>
+                                </StyledTouchableOpacity>
+                            </StyledView>
                             <StyledView style={{ height: hp(55) }} className="bg-neutral-200 rounded-3xl p-4">
                                 <StyledScrollView
                                     bounces={false}
@@ -143,50 +120,16 @@ const HomeScreen = () => {
                         <Features />
                     )
                 }
-                <StyledView className="flex justify-center items-center">
-                    {
-                        recording ? (
-                            <StyledTouchableOpacity className="bg-red-400 p-2 rounded-full transition">
-                                <StyledView className="bg-red-700 p-2 rounded-full transition">
-                                    <StyledImage
-                                        className="rounded-full"
-                                        source={require('../../assets/recording-icon.png')}
-                                        style={{ width: wp(10), height: wp(10) }}
-                                    />
-                                </StyledView>
-                            </StyledTouchableOpacity>
-                        ) : (
-                            <StyledTouchableOpacity className="bg-emerald-400 p-2 rounded-full transition">
-                                <StyledView className="bg-emerald-700 p-2 rounded-full transition">
-                                    <StyledImage
-                                        className="rounded-full"
-                                        source={require('../../assets/recording-icon.png')}
-                                        style={{ width: wp(10), height: wp(10) }}
-                                    />
-                                </StyledView>
-                            </StyledTouchableOpacity>
-                        )
-                    }
-
-                    {
-                         speaking && (
-                            <StyledTouchableOpacity onPress={stopSpeaking} className="bg-red-400 rounded-3xl p-2 absolute left-10">
-                                <StyledText className="text-white font-semibold">
-                                    Stop
-                                </StyledText>
-                            </StyledTouchableOpacity>
-                        )
-                    }
-
-                    {
-                        messages.length > 0 && (
-                            <StyledTouchableOpacity onPress={clear} className="bg-neutral-400 rounded-3xl p-2 absolute right-10">
-                                <StyledText className="text-white font-semibold">
-                                    Clear
-                                </StyledText>
-                            </StyledTouchableOpacity>
-                        )
-                    }
+                <StyledView className="flex flex-row justify-center items-center w-full my-4 p-5">
+                    <StyledTextInput
+                        value={value}
+                        className="h-14 w-[90%] border border-gray-300 rounded-lg px-4"
+                        placeholder="Type a message..."
+                        onChange={(e) => setValue(e.nativeEvent.text)}
+                    />
+                    <StyledTouchableOpacity className="bg-blue-400 rounded-lg p-4 ml-2">
+                        <FontAwesomeIcon icon={faPaperPlane} size={20} color={"white"} />
+                    </StyledTouchableOpacity>
                 </StyledView>
             </StyledSafeAreaView>
         </StyledView>

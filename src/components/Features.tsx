@@ -17,7 +17,7 @@ const featuresData = [
     },
     {
         title: "Smart AI",
-        description: "A powerful voice assistant with the abilities of ChatGPT and DALL-E combined, providing you the best of both worlds.",
+        description: "A powerful text assistant with the abilities of ChatGPT and DALL-E combined, providing you the best of both worlds.",
         image: require('../../assets/smart-ai-icon.png'),
         backgroundColor: "bg-cyan-200"
     }
